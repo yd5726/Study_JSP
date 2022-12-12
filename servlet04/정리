@@ -1,0 +1,100 @@
+EL(Expression Language) : ${}
+모든 속성(attribute) 을 출력하는데 사용한다 
+: page scope < request scope < session scope < application scope
+
+attribute 로 저장(set)한 값이 있으면 ${속성명} 출력
+parameter 를 출력: ${param.파라미터명}
+배열 parameter 를 출력: ${paramValues.파라미터명[인덱스]}
+ 
+
+연산자
+1.산술연산자: +, -, *, /(div), %(mod)
+2.비교연산자: ==(eq), !=(ne), >(gt), <(lt), >=(ge), <=(le) 
+3.논리연산자: &&(and), ||(or), !(not), empty 
+ 
+[인덱스]: 배열, 자료구조(ArrayList) 출력
+[키]: 자료구조(HashMap) 출력
+
+
+JSTL(JSP Standard Tag Library)
+1. 코어 라이브러리
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+변수선언문, 조건문, 반복문 등... 
+1) 변수선언문: <c:set var='변수명' value="값"></c:set >  <c:set />
+   데이터타입 변수명;    변수명  = 값;
+   ( int no; no = 10; )
+   데이터타입 변수명 = 값;
+   ( int no = 10 ; )
+
+ 변수삭제: <c:remove var="변수명"/>
+ 
+2) 조건문 
+   if문: <c:if test='조건식'></c:if> 
+   if(조건식){
+   } 
+   choose문: <c:choose>
+   				<c:when test='조건식1'></c:when>
+   				<c:when test='조건식2'></c:when>
+   				<c:when test='조건식3'></c:when>
+   				....
+   				<c:otherwise></c:otherwise>
+   			 </c:choose>		
+
+3) 반복문 
+   for(int no=1; no<=10; no++){
+   }
+   for(데이터타입 변수명 : 배열변수){
+   }
+   기본for문 <c:forEach var='변수명' begin='시작값' end='끝값' step='1'>
+   			</c:forEach>	
+	향상된 for문 <c:forEach items='배열변수명' var='변수명'>
+				</c:forEach>
+
+=======1118========-----------------------------------------------------
+4) 토큰 분리
+   String alpha = "A,B,C,D";	
+   String data[] = alpha.split(",");
+   ------------------------------------------------------
+   String alpha = "A,B,C/D";
+   String data[] = alpha.split(",");
+   StringTokenizer token = new StringTokenizer("/,");
+   token.nextToken(); //A
+   token.nextToken(); //B
+   token.nextToken(); //C
+   token.nextToken(); //D
+   while(token.hasMoreTokens()){
+     token.nextToken();
+   }
+   // 구분자는 delims!!!!!
+   <c:forTokens items="문자열" delims="/,?", var="분리된 토큰을 담을 변수">
+     ${분리된 토큰을 담을 변수}
+   </c:forTokens>
+   
+ 5) 페이지 이동, 링크 걸기 : <c:url value='요청 url'/>  
+========================================================================라이브러리1(코어 라이브러리) 끝
+2. 함수 라이브러리
+	2-1. 문자열에 대한 함수 라이브러리
+		<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+		1) 문자열의 길이 : ${fn: length(데이터)}
+		2) 문자열의 일부 : ${fn: substring(데이터, 시작, 끝위치+1)} //3번째 파라미터(끝위치+1) 생략 불가
+		3) 문자열의 공백 제거: ${fn: trim(데이터)} //양쪽 끝 공백 자르기
+		4) 특정 문자열의 시작 위치: ${fn: indexOf(데이터, 대상문자열)}
+		5) 문자열에서 특정 문자열을 다른 문자열로 바꾸기 : ${fn: replace(데이터, 특정문자열, 다른문자열)}
+		6) 대/소문자화 : ${fn: toUpperCase/toLowerCase(데이터)}
+		7) 특정 문자열이 포함되어 있는지 확인: ${fn: contains(데이터, 특정문자열)}
+ 		8) 배열변수를 하나의 문자열로 만들기: ${fn: join(데이터, 연결문자열)}
+ 		9) 문자 분리: ${fn: split(데이터, 구분자)}
+ 		
+3. 포멧 라이브러리 - 날짜, 숫자
+<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
+날짜 포맷 기본 : 2022. 11. 08
+날짜 표현 방식 : dateStyle : medium(기본), full, long, short
+사용자가 지정한 포맷 형식 : pattern="사용자가 원하는 포맷 형식"	yyyy/MM/dd a hh:mm:ss
+														월:MM, 분:mm (Oracle- 월:mm, 분:mi)
+출력할 것 (날짜/시각) 지정 : type="date(기본)/time" 
+---------1121--------------------------------------------------------------------
+숫자 포맷:
+groupingUsed = true 기본 - 천 단위 , 포맷
+사용자 지정 형식: pattern="###,###,###.##" 12345 -> 12,345.12
+백분율: type="percent" value="0~1" 1이면 100%
+금액: 통화 기호 type="currency" value="100000"  ￦100,000

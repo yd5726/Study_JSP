@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+	<select id="select_name" resultType="String">
+		select name from tbl_java_user where id = 'user1'
+	</select>
+	
+	<select id="select_money" resultType="Integer">
+		select money from tbl_java_user where id = 'user1' 
+	</select>
+	
+	<select id="select_name_all" resultType="String">
+		select name from tbl_java_user
+	</select>
+	
+	<select id="select_user_list" resultType="dto.UserDTO">
+		select * from tbl_java_user
+	</select>
+	
+	<select id="user_info" resultType="dto.UserDTO">
+		select * from tbl_java_user where id = #{id}
+	</select>
+</mapper>
